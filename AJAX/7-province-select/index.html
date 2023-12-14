@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sugerencias provincias</title>
+    <style>
+        :root {
+            color-scheme: light dark;
+        }
+    </style>
+</head>
+<body>
+<span>Provincias</span>
+<select id="provincias"></select>
+<span>Localidades</span>
+<select id="localidades"></select>
+<script type="module">
+    const xml = await fetch('provinciasypoblaciones.xml').then(res => res.text())
+    const domParser = new DOMParser()
+    const doc = domParser.parseFromString(xml, 'application/xml')
+    const provinciasXml = doc.querySelectorAll('provincia')
+    const provincias = Array.from(provinciasXml).map(provincia => {
+        const nombre = provincia.querySelector('nombre').textContent
+        const localidades = Array.from(provincia.querySelectorAll('localidad')).map(localidad => localidad.textContent)
+        return {
+            nombre,
+            localidades
+        }
+    })
+    const provinciasSelect = document.querySelector('#provincias')
+    const localidadesSelect = document.querySelector('#localidades')
+
+    provincias.forEach(provincia => {
+        const option = document.createElement('option')
+        option.textContent = provincia.nombre
+        provinciasSelect.appendChild(option)
+    })
+
+    provinciasSelect.addEventListener('change', () => {
+        const provinciaSeleccionada = provincias.find(provincia => provincia.nombre === provinciasSelect.value)
+        localidadesSelect.innerHTML = ''
+        provinciaSeleccionada.localidades.forEach(localidad => {
+            const option = document.createElement('option')
+            option.textContent = localidad
+            localidadesSelect.appendChild(option)
+        })
+    })
+</script>
+</body>
+</html>
