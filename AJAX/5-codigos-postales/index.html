@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Provincias</title>
+    <style>
+        :root {
+            color-scheme: light dark;
+        }
+    </style>
+</head>
+<body>
+<input type="text" placeholder="Código postal">
+<input type="text" disabled placeholder="Provincia">
+<script type="module">
+    const xml = await fetch('provincias.xml').then(res => res.text())
+    const domParser = new DOMParser()
+    const doc = domParser.parseFromString(xml, 'application/xml')
+    const allProvincias = doc.querySelectorAll('provincia')
+    const provincias = Array.from(allProvincias).map(el => ({
+        nombre: el.querySelector('nombre').textContent,
+        codigo: el.querySelector('codigo_postal').textContent
+    }))
+
+
+    const cpInput = document.querySelector('input')
+    const provinciaInput = document.querySelector('input[disabled]')
+    cpInput.addEventListener('input', () => {
+        const value = cpInput.value
+        if (value.length >= 2) {
+            const provincia = provincias.find(provincia => provincia.codigo.startsWith(value))
+            if (provincia) {
+                provinciaInput.value = provincia.nombre
+            } else {
+                provinciaInput.value = ''
+            }
+        } else {
+            provinciaInput.value = ''
+        }
+    })
+</script>
+</body>
+</html>
