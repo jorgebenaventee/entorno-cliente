@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Provincias</title>
+    <style>
+        :root {
+            color-scheme: light dark;
+        }
+    </style>
+</head>
+<body>
+<input type="text" placeholder="Código postal">
+<input type="text" disabled placeholder="Provincia">
+<script type="module">
+    const communities = await fetch('provincias.json').then(res => res.json())
+    const provinces = communities.flatMap(c => c.provinces)
+    console.log({provinces, communities})
+
+
+    const cpInput = document.querySelector('input')
+    const provinciaInput = document.querySelector('input[disabled]')
+    cpInput.addEventListener('input', () => {
+        const value = cpInput.value
+        if (value.length >= 2) {
+            const provincia = provinces.find(provincia => provincia.code.startsWith(value))
+            if (provincia) {
+                provinciaInput.value = provincia.label
+            } else {
+                provinciaInput.value = ''
+            }
+        } else {
+            provinciaInput.value = ''
+        }
+    })
+</script>
+</body>
+</html>
