@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bienvenido</title>
+    <style>
+        :root {
+            color-scheme: light dark;
+        }
+    </style>
+</head>
+<body>
+<h1>Bienvenido!</h1>
+<script type="module">
+    import {configuration} from "./load-ini.js";
+
+    Object.entries(configuration).forEach(([key, value]) => {
+        const paragraph = document.createElement('p')
+        paragraph.innerText = `${key}: ${value}`
+        document.body.appendChild(paragraph)
+    })
+</script>
+</body>
+</html>
