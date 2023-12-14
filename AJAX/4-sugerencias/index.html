@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sugerencias provincias</title>
+    <style>
+        :root {
+            color-scheme: light dark;
+        }
+    </style>
+</head>
+<body>
+<input type="text" placeholder="Introduce el nombre de provincia">
+<p>Lista de sugerencias</p>
+<ul id="suggestions"></ul>
+<script type="module">
+    const xml = await fetch('provinciasypoblaciones.xml').then(res => res.text())
+    const domParser = new DOMParser()
+    const doc = domParser.parseFromString(xml, 'application/xml')
+    const nombres = doc.querySelectorAll('nombre')
+    const provincias = Array.from(nombres).map(el => el.textContent)
+
+    const input = document.querySelector('input')
+    const suggestionsList = document.querySelector('#suggestions')
+
+    input.addEventListener('input', () => {
+        const value = input.value
+        const sugerencias = provincias.filter(provincia => provincia.toLowerCase().startsWith(value.toLowerCase()))
+        suggestionsList.innerHTML = ''
+        sugerencias.forEach(sugerencia => {
+            const li = document.createElement('li')
+            li.textContent = sugerencia
+            suggestionsList.appendChild(li)
+        })
+        console.log(sugerencias)
+        if (sugerencias.length === 1) {
+            input.value = sugerencias[0]
+        }
+    })
+</script>
+</body>
+</html>
