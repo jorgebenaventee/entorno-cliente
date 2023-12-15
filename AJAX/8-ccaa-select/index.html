@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Pepe</title>
+</head>
+<body>
+<span>Comunidades</span>
+<select id="comunidades"></select>
+<span>Provincias</span>
+<select id="provincias"></select>
+<span>Localidades</span>
+<select id="localidades"></select>
+<script type="module">
+    const comunidades = await fetch('provincias.json').then(res => res.json())
+    const comunidadesSelect = document.querySelector('#comunidades')
+    const provinciasSelect = document.querySelector('#provincias')
+    const localidadesSelect = document.querySelector('#localidades')
+
+    comunidades.forEach(comunidad => {
+        const option = document.createElement('option')
+        option.textContent = comunidad.label
+        option.value = comunidad.code
+        comunidadesSelect.appendChild(option)
+    })
+
+    comunidadesSelect.addEventListener('change', () => {
+        const selectedComunidad = comunidades.find(comunidad => comunidad.code === comunidadesSelect.value)
+        provinciasSelect.innerHTML = ''
+        localidadesSelect.innerHTML = ''
+        selectedComunidad.provinces.forEach(provincia => {
+            const option = document.createElement('option')
+            option.textContent = provincia.label
+            option.value = provincia.code
+            provinciasSelect.appendChild(option)
+        })
+    })
+
+    provinciasSelect.addEventListener('change', () => {
+        const selectedComunidad = comunidades.find(comunidad => comunidad.code === comunidadesSelect.value)
+        const selectedProvincia = selectedComunidad.provinces.find(provincia => provincia.code === provinciasSelect.value)
+        localidadesSelect.innerHTML = ''
+        selectedProvincia.towns.forEach(localidad => {
+            const option = document.createElement('option')
+            option.textContent = localidad.label
+            option.value = localidad.code
+            localidadesSelect.appendChild(option)
+        })
+    })
+</script>
+</body>
+</html>
