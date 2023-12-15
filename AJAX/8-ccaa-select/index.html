@@ -27,6 +27,20 @@
         comunidadesSelect.appendChild(option)
     })
 
+    comunidades[0].provinces.forEach(provincia => {
+        const option = document.createElement('option')
+        option.textContent = provincia.label
+        option.value = provincia.code
+        provinciasSelect.appendChild(option)
+    })
+
+    comunidades[0].provinces[0].towns.forEach(localidad => {
+        const option = document.createElement('option')
+        option.textContent = localidad.label
+        option.value = localidad.code
+        localidadesSelect.appendChild(option)
+    })
+
     comunidadesSelect.addEventListener('change', () => {
         const selectedComunidad = comunidades.find(comunidad => comunidad.code === comunidadesSelect.value)
         provinciasSelect.innerHTML = ''
@@ -36,6 +50,12 @@
             option.textContent = provincia.label
             option.value = provincia.code
             provinciasSelect.appendChild(option)
+        })
+        selectedComunidad.provinces[0].towns.forEach(localidad => {
+            const option = document.createElement('option')
+            option.textContent = localidad.label
+            option.value = localidad.code
+            localidadesSelect.appendChild(option)
         })
     })
 
