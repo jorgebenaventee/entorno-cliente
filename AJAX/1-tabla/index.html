@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX</title>
+    <style>
+        table, tr, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        table {
+            margin-top: 1vh;
+        }
+    </style>
+</head>
+<body>
+<input type="number" placeholder="Filtrar por precio">
+<button>Mostrar tabla</button>
+<table></table>
+<script defer>
+    const button = document.querySelector('button');
+    const input = document.querySelector('input');
+    const table = document.querySelector('table');
+    button.addEventListener('click', () => {
+        table.innerHTML = '';
+        fetch('xml/cd_catalog.xml')
+            .then(res => res.text())
+            .then(xml => {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xml, 'text/xml');
+                const cds = xmlDoc.querySelectorAll('CD');
+                const thead = document.createElement('thead');
+                const tbody = document.createElement('tbody');
+                const tr = document.createElement('tr');
+                const th1 = document.createElement('th');
+                const th2 = document.createElement('th');
+                const price = document.createElement('th');
+                const inputFilter = Number(input.value) || 0
+                th1.textContent = 'Title';
+                th2.textContent = 'Artist';
+                price.textContent = 'Price';
+                tr.appendChild(th1);
+                tr.appendChild(th2);
+                tr.appendChild(price);
+                thead.appendChild(tr);
+                table.appendChild(thead);
+                const filteredCds = Array.from(cds).filter(cd => Number(cd.querySelector('PRICE').textContent) > inputFilter);
+                filteredCds.forEach(cd => {
+                    const tr = document.createElement('tr');
+                    const td1 = document.createElement('td');
+                    const td2 = document.createElement('td');
+                    const td3 = document.createElement('td');
+                    td1.textContent = cd.querySelector('TITLE').textContent;
+                    td2.textContent = cd.querySelector('ARTIST').textContent;
+                    td3.textContent = cd.querySelector('PRICE').textContent;
+                    tr.appendChild(td1);
+                    tr.appendChild(td2);
+                    tr.appendChild(td3);
+                    tbody.appendChild(tr);
+                });
+                table.appendChild(tbody);
+                document.body.appendChild(table);
+            });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input type="password" placeholder="Contraseña">
+<p id="mensaje"></p>
+<script type="module">
+    const input = document.querySelector('input');
+    const mensaje = document.querySelector('#mensaje');
+    const password = await fetch('password.txt')
+        .then(response => response.text())
+    input.addEventListener('input', (e) => {
+        if (password === e.target.value) {
+            mensaje.textContent = 'Contraseña correcta 😎👍️';
+        } else {
+            mensaje.textContent = 'Contraseña incorrecta 😭👎️';
+        }
+    })
+</script>
+</body>
+</html>
